@@ -752,14 +752,16 @@ class RoomConnection extends Events.Emitter {
             }
             if (count === 0) {
                 debugLog('Категория не определена');
+                var classif = prompt('Введите классификацию:');
+                store.set(HOSTNAME, classif);
                 
                 // TODO: ручной ввод классификакции сайта
-                if (TRAINING_MODE) {
+                /*if (TRAINING_MODE) {
                     var classification = prompt('Введите классификацию сайта');
                     debugLog('Сохраняем ручную классификацию ' + classification + ' для сайта ' + HOSTNAME);
-                }
+                }*/
             }
-            else {  
+            else {
                 var maxCount = 0;
                 var maxCat = '';
                 for (var item in frequency) {
@@ -774,7 +776,7 @@ class RoomConnection extends Events.Emitter {
                 console.log('count = ' + count);
                 
                 if (maxCat === null) {
-                    debugLog('Категория не определена');
+                    debugLog('Категория не получена от других пиров');
                     var classif = prompt('Введите классификацию:');
                     store.set(HOSTNAME, classif);
                     /*swal({
@@ -1025,5 +1027,5 @@ var log = console.log.bind(console);
 // Старт приложения
 //var gameRoom = new GameRoom('https://' + window.location.hostname); // Herokuapp
 
-//var gameRoom = new GameRoom('http://' + window.location.hostname + ':3000'); // Local client + local server
-var gameRoom = new GameRoom('https://webrtc-classif-dhtnetwork.herokuapp.com'); // Local client + remote server
+var gameRoom = new GameRoom('http://' + window.location.hostname + ':3000'); // Local client + local server
+//var gameRoom = new GameRoom('https://webrtc-classif-dhtnetwork.herokuapp.com'); // Local client + remote server
