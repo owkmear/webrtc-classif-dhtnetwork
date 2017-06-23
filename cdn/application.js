@@ -773,7 +773,31 @@ class RoomConnection extends Events.Emitter {
                 console.log('Топ стат = ' + maxCount);
                 console.log('count = ' + count);
                 
-                debugLog('Сохраняем классификацию ' + maxCat + ' для сайта ' + HOSTNAME);
+                if (maxCat === null) {
+                    debugLog('Категория не определена');
+                    swal({
+                        title: "Сайт не удалось классифицировать",
+                        text: "Введите классификацию для этого сайта:",
+                        type: "input",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        animation: "slide-from-top",
+                        inputPlaceholder: "Классификация"
+                    },
+                    function(inputValue){
+                        if (inputValue === "" || inputValue === false) {
+                            console.log('Ничего не введено');
+                        }
+                        else
+                            console.log('Ввели: ' + inputValue);
+                        swal.close();
+                    });
+                }
+                else {
+                    swal("Сайт классифицирован", "Категория: " + maxCat, "success");
+                    debugLog('Сохраняем классификацию ' + maxCat + ' для сайта ' + HOSTNAME);
+                    store.set(HOSTNAME, maxCat);
+                }
             }
             answersFromPeers = [];
         }, RESPONSE_TIME);
@@ -997,6 +1021,6 @@ var log = console.log.bind(console);
 
 // Старт приложения
 //var gameRoom = new GameRoom('https://' + window.location.hostname); // Herokuapp
-//var gameRoom = new GameRoom('http://' + window.location.hostname + ':3000'); // Local client + local server
 
-var gameRoom = new GameRoom('https://webrtc-classif-dhtnetwork.herokuapp.com'); // Local client + remote server
+var gameRoom = new GameRoom('http://' + window.location.hostname + ':3000'); // Local client + local server
+//var gameRoom = new GameRoom('https://webrtc-classif-dhtnetwork.herokuapp.com'); // Local client + remote server
