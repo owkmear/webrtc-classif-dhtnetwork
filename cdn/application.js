@@ -775,7 +775,9 @@ class RoomConnection extends Events.Emitter {
                 
                 if (maxCat === null) {
                     debugLog('Категория не определена');
-                    swal({
+                    var classif = prompt('Введите классификацию:');
+                    store.set(HOSTNAME, classif);
+                    /*swal({
                         title: "Сайт не удалось классифицировать",
                         text: "Введите классификацию для этого сайта:",
                         type: "input",
@@ -791,10 +793,11 @@ class RoomConnection extends Events.Emitter {
                         else
                             console.log('Ввели: ' + inputValue);
                         swal.close();
-                    });
+                    });*/
                 }
                 else {
-                    swal("Сайт классифицирован", "Категория: " + maxCat, "success");
+                    //swal("Сайт классифицирован", "Категория: " + maxCat, "success");
+                    alert("Сайт классифицирован\nКатегория: " + maxCat);
                     debugLog('Сохраняем классификацию ' + maxCat + ' для сайта ' + HOSTNAME);
                     store.set(HOSTNAME, maxCat);
                 }
@@ -1022,5 +1025,5 @@ var log = console.log.bind(console);
 // Старт приложения
 //var gameRoom = new GameRoom('https://' + window.location.hostname); // Herokuapp
 
-//var gameRoom = new GameRoom('http://' + window.location.hostname + ':3000'); // Local client + local server
-var gameRoom = new GameRoom('https://webrtc-classif-dhtnetwork.herokuapp.com'); // Local client + remote server
+var gameRoom = new GameRoom('http://' + window.location.hostname + ':3000'); // Local client + local server
+//var gameRoom = new GameRoom('https://webrtc-classif-dhtnetwork.herokuapp.com'); // Local client + remote server
