@@ -1025,5 +1025,5 @@ var log = console.log.bind(console);
 // Старт приложения
 //var gameRoom = new GameRoom('https://' + window.location.hostname); // Herokuapp
 
-var gameRoom = new GameRoom('http://' + window.location.hostname + ':3000'); // Local client + local server
-//var gameRoom = new GameRoom('https://webrtc-classif-dhtnetwork.herokuapp.com'); // Local client + remote server
+//var gameRoom = new GameRoom('http://' + window.location.hostname + ':3000'); // Local client + local server
+var gameRoom = new GameRoom('https://webrtc-classif-dhtnetwork.herokuapp.com'); // Local client + remote server
