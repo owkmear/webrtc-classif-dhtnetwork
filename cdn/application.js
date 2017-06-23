@@ -3,14 +3,40 @@
 var DEBUG_MODE = true;
 var COLOR_DEBUG = "blue";
 var COLOR_EXCEPTION = "red";
+var COLOR_RESULT = "blue";
+var LOG_COUNT = 20;
 var RESPONSE_TIME = 1000; // Время на ожидание ответа о классификации от пиров
-var TRAINING_MODE = true; // Режим обучения, при котором пользователю предлагается задать классификацию вручную
+var TRAINING_MODE = false; // Режим обучения, при котором пользователю предлагается задать классификацию вручную
 var TRAINING_MODE_2 = false; // Режим обучения, при котором определенная классификация добавляется в БД
 var HOSTNAME = window.location.hostname;
 //var ROOT = 'http://localhost:3001';
 var ROOT = 'https://signallingserverfe4e8e9b6b.herokuapp.com';
 
 var answersFromPeers = []; // Для сбора ответов от пиров
+
+class Storage {
+    set(key, value) {
+        try {
+            localStorage.setItem(key, value);
+        } catch(e) {
+            if (e == QUOTA_EXCEEDED_ERR)
+                console.log("Local storage is full");
+        }
+    }
+    get(key) {
+        return localStorage.getItem(key);
+    }
+    
+    // Отправка запроса: был ли кем-то классифицирован запрашиваемый сайт
+    requestCategory() {
+        
+    }
+}
+var store = new Storage();
+store.set("nature.ru", "природа");
+store.set("auto.ru", "автомобили");
+store.set("news.ru", "новости");
+store.set("127.0.0.1", "цирк");
 
 // Events.js
 class EventEmitter {
@@ -805,6 +831,12 @@ class GameRoom {
         this.roomConnection = new RoomConnection(this.roomId, this.socket);
         this.roomConnection.on('joined', this.onJoinedRoom, this);
         this.roomConnection.connect();
+        
+        setTimeout(function() {
+            
+            console.log('call room.classifReq()');
+            room.classifReq();
+        }, 2000);
     }
 
     onJoinedRoom(roomInfo) {
@@ -904,9 +936,36 @@ function test() {
     c.loadKeyWordDatabase();
     
     c.loadWordsWithoutSubject();
-    debugLog('Категория: ' + c.getCategory(document.documentElement.innerHTML));
+    var cat = c.getCategory(document.documentElement.innerHTML);
+    
+    if (cat === null) {
+        debugLog('Категория не определена');
+        swal({
+            title: "Сайт не удалось классифицировать",
+            text: "Введите классификацию для этого сайта:",
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputPlaceholder: "Классификация"
+        },
+        function(inputValue){
+            if (inputValue === "" || inputValue === false) {
+                console.log('Ничего не введено');
+            }
+            else
+                console.log('Ввели: ' + inputValue);
+            swal.close();
+        });
+    }
+    else {
+        debugLog('Категория: ' + cat);
+        swal("Сайт классифицирован", "Категория: " + cat, "success");
+    }
+    
+    //swal("Good job!", "You clicked the button!", "success");
 }
-test();
+//test();
 
 
 
@@ -923,6 +982,14 @@ function exceptionLog(message) {
         var date = new Date();
         var time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
         console.log('%c[' + time + '] %s', 'color:' + COLOR_EXCEPTION, message);
+    }
+}
+
+function resultLog(message) {
+    if (DEBUG_MODE) {
+        var date = new Date();
+        var time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        console.log('%c[' + time + '] %s', 'color:' + COLOR_RESULT, message);
     }
 }
 

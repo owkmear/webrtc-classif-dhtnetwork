@@ -257,22 +257,51 @@ class Classificator {
         //console.log('Размер = ' + categoryPoints.length);
         
         //console.log(words);
+        //console.log('Всего: ' + words.length);
+        var count = 0;
         words.forEach(function(item) {
-            console.log('Найдено: ' + item.name + ' - ' + item.count);
+            if (count < LOG_COUNT)
+                resultLog('Найдено: ' + item.name + ' - ' + item.count);
+            count++;
         });
 
-        if (TRAINING_MODE_2) {
+        /*if (TRAINING_MODE_2) {
             if (maxMatCat === null)
+            {
                 maxMatCat = prompt('Категория сайта не определена\n\nВведите категорию:');
+                
+                
+                swal({
+                    title: "Сайт не удалось классифицировать",
+                    text: "Введите классификацию для этого сайта:",
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Классификация"
+                },
+                function(inputValue){
+                    if (inputValue === "" || inputValue === false) {
+                        console.log('Ничего не введено');
+                    }
+                    else
+                        console.log('Ввели: ' + inputValue);
+                    swal.close();
+                });
+                
+                
+                
+                
+            }
             
             this.addDataToDb(maxMatCat, words);
             
-            this.saveDb();
+            //this.saveDb();
             console.log('Режим обучения включен');
         }
         else
             console.log('Режим обучения выключен');
-        
+        */
         return maxMatCat;
     }
 
